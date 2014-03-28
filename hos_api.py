@@ -10,7 +10,6 @@ from protorpc import remote
 package = 'hackerorslacker'
 
 from hos_models import *
-from raw_data import *
 
 def addLanguage(name):
     new_language=CodeLanguage(id=name)
@@ -50,26 +49,25 @@ class HOSApi(remote.Service):
         max_num_entry.put()
         return new_key
 
-    @endpoints.method(message_types.VoidMessage, CodeEntryIDCollection,
-                      path='codeentry_shelve', http_method='POST',
-                      name='codeentry.shelve_add')
-    def code_shelve_put(self, collection_request):
-        a = get_data()
-        max_num_entry = ndb.Key('MaxCodeEntryIndex', 'root').get()
-        retval = []
-        for request_key in a:
-            request = a[request_key]
-            language = ndb.Key( CodeLanguage, "Python" ).get()
-            new_code_blob=CodeEntryStore(id=max_num_entry.max_index+1,
-                                         creation_time=datetime.datetime.now(),
-                                         git_username=request["user"],
-                                         language=language.key, code_blob=request["fragment"])
-            code_key = new_code_blob.put()
-            max_num_entry.max_index = max_num_entry.max_index + 1
-            retval.append(CodeEntryID(key=code_key.urlsafe()))
-        max_num_entry.put()
-        return CodeEntryIDCollection(keys=retval)
-
+#    @endpoints.method(message_types.VoidMessage, CodeEntryIDCollection,
+#                      path='codeentry_shelve', http_method='POST',
+#                      name='codeentry.shelve_add')
+#    def code_shelve_put(self, collection_request):
+#        a = get_data()
+#        max_num_entry = ndb.Key('MaxCodeEntryIndex', 'root').get()
+#        retval = []
+#        for request_key in a:
+#            request = a[request_key]
+#            language = ndb.Key( CodeLanguage, "Python" ).get()
+#            new_code_blob=CodeEntryStore(id=max_num_entry.max_index+1,
+#                                         creation_time=datetime.datetime.now(),
+#                                         git_username=request["user"],
+#                                         language=language.key, code_blob=request["fragment"])
+#            code_key = new_code_blob.put()
+#            max_num_entry.max_index = max_num_entry.max_index + 1
+#            retval.append(CodeEntryID(key=code_key.urlsafe()))
+#        max_num_entry.put()
+#        return CodeEntryIDCollection(keys=retval)
 
     @endpoints.method(CodeEntryPutCollection, CodeEntryIDCollection,
                       path='codeentry', http_method='POST',
@@ -103,7 +101,6 @@ class HOSApi(remote.Service):
             random_numbers.append(random.randint(0,max_num_entry.max_index-1))
         result = []
         for r_number in random_numbers:
-            logging.info(r_number)
             entry_key = ndb.Key('CodeEntryStore', r_number+1)
             entry = entry_key.get()
             result.append(CodeEntry(key=entry_key.urlsafe(),

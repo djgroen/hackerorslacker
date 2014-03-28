@@ -7,11 +7,6 @@ threadsafe: true
 handlers:
 - url: /_ah/spi/.*
   script: hos_api.APPLICATION
-- url: /frontend
-  static_dir: frontend
-- url: /.*
-  script: hos_main.application
-
 
 libraries:
 - name: pycrypto
