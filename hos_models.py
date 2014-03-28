@@ -19,10 +19,14 @@ class CodeEntry(messages.Message):
     score = messages.IntegerField(5, required=False)
     total_voted = messages.IntegerField(6, required=False)
     code_blob = messages.StringField(7, required=True)
+    git_username = messages.StringField(8, required=True)
+    name = messages.StringField(9, required=False)
 
 class CodeEntryPut(messages.Message):
     language = messages.StringField(1, required=True)
     code_blob = messages.StringField(2, required=True)
+    git_username = messages.StringField(3, required=True)
+    name = messages.StringField(4, required=False)
 
 class CodeEntryCollection(messages.Message):
     entries = messages.MessageField(CodeEntry, 1, repeated=True)
@@ -34,6 +38,8 @@ class CodeEntryStore(ndb.Model):
     creation_time = ndb.DateTimeProperty(required=True)
     last_voted = ndb.DateTimeProperty(required=False)
     language = ndb.KeyProperty(required=True,kind=CodeLanguage)
+    git_username = ndb.StringProperty(required=False)
+    name = ndb.StringProperty(required=False)
     score = ndb.IntegerProperty(required=True,default=0)
     total_voted = ndb.IntegerProperty(required=True,default=0)
     code_blob = ndb.TextProperty(required=True)

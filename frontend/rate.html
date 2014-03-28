@@ -22,15 +22,21 @@
     <h1>Hacker or Slacker?</h1>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="frontend.js"></script>
+    <script src="shCore.js"></script>
+    <script src="shBrushPython.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
 <!--    <script src="rainbow-custom.min.js"></script> -->
-
-    <br/>
-    <div align="center">
-      <a class="btn btn-primary" href="rate.html">Rate!</a><br/>
-      <a class="btn btn-primary" href="submit.html">Submit</a><br/>
-      <a class="btn btn-primary" href="scored.html">Scores</a>
-    </div>
+    <img src="spinner.gif" id="spinner"/>
+    <pre class="brush: python; ruler: true; first-line: 10; highlight: [2, 4, 6]" id="codeblob" style="display: none">
+      
+    </pre>
+     <br/>
+    <a class="btn btn-primary disabled vote-btn" onclick="downvote()">Slacker</a>
+    <a class="btn btn-primary disabled vote-btn" onclick="ignorevote()">Not Sure</a>
+    <a class="btn btn-primary disabled vote-btn" onclick="upvote()">Hacker</a>
   </body>
 </html>

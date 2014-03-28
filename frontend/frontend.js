@@ -4,17 +4,16 @@ var currentKey = ''
 loadNextCode = function() {
     $('#codeblob').empty()
     gapi.client.hackerorslacker.codeentry.list().execute(function (response) {
-	code=response.entries[0].code_blob;
+	escaped_code=response.entries[0].code_blob;
 	currentKey = response.entries[0].key;
 	//	    escaped_code=$('<div/>').text(code).html();
-	escaped_code=code.replace(/[\r\n]/g, "<br />");
+	//escaped_code=code.replace(/[\r\n]/g, "<br />");
 	$('#codeblob').append(escaped_code);
+	SyntaxHighlighter.all()
 	$('#spinner').hide()
 	$('#codeblob').show()
 	$('.vote-btn').removeClass('disabled')
-//	    Rainbow.color(escaped_code, 'C++', function (hilited_code) {
-//		$('#codeblob').append(hilited_code);
-//	    });
+	
     });
 }
 

@@ -20,6 +20,8 @@ def addCodeBlob(params):
     max_num_entry = ndb.Key('MaxCodeEntryIndex', 'root').get()
     new_code_blob=CodeEntryStore(id=max_num_entry.max_index+1,
                                  creation_time=datetime.datetime.now(),
+                                 git_username=params['git_username'],
+                                 name=params['name'],
                                  language=language.key, code_blob=params['code'])
     new_code_blob.put()
     max_num_entry.max_index = max_num_entry.max_index + 1
@@ -35,10 +37,11 @@ def deleteAllCodeBlobs():
 @endpoints.api(name='hackerorslacker', version='v1')
 class HOSApi(remote.Service):
     @ndb.transactional(xg=True)
-    def addCodeBlob(self,language,code_blob):
+    def addCodeBlob(self,language,code_blob,git_username,name):
         max_num_entry = ndb.Key('MaxCodeEntryIndex', 'root').get()
         new_code_blob=CodeEntryStore(id=max_num_entry.max_index+1,
                                      creation_time=datetime.datetime.now(),
+                                     git_username=git_username, name=name,
                                      language=language.key, code_blob=code_blob)
         new_key = new_code_blob.put()
         max_num_entry.max_index = max_num_entry.max_index + 1
@@ -50,7 +53,7 @@ class HOSApi(remote.Service):
                       name='codeentry.add')
     def code_put(self, request):
         language = ndb.Key( CodeLanguage, request.language ).get()
-        code_key = self.addCodeBlob(language, request.code_blob)
+        code_key = self.addCodeBlob(language, request.code_blob, request.git_username, request.name)
         entry = code_key.get()
         if entry is None:
             raise endpoints.NotFoundException('Greeting %s not found.' %
@@ -59,6 +62,8 @@ class HOSApi(remote.Service):
             return CodeEntry(key=entry.key.urlsafe(),
                          creation_time=entry.creation_time,
                          last_voted=entry.last_voted,
+                         git_username=entry.git_username,
+                         name=entry.name,    
                          language=entry.language.id(),
                          score=entry.score,
                          total_voted=entry.total_voted,
@@ -85,6 +90,8 @@ class HOSApi(remote.Service):
                                     last_voted=entry.last_voted,
                                     language=entry.language.id(),
                                     score=entry.score,
+                                    git_username=entry.git_username,
+                                    name=entry.name,    
                                     total_voted=entry.total_voted,
                                     code_blob=entry.code_blob))
         return CodeEntryCollection(entries=result)
@@ -117,6 +124,8 @@ class HOSApi(remote.Service):
                          creation_time=entry.creation_time,
                          last_voted=entry.last_voted,
                          language=entry.language.id(),
+                         git_username=entry.git_username,
+                         name=entry.name,    
                          score=entry.score,
                          total_voted=entry.total_voted,
                          code_blob=entry.code_blob)
@@ -131,6 +140,8 @@ class HOSApi(remote.Service):
                          creation_time=entry.creation_time,
                          last_voted=entry.last_voted,
                          language=entry.language.id(),
+                         git_username=entry.git_username,
+                         name=entry.name,    
                          score=entry.score,
                          total_voted=entry.total_voted,
                          code_blob=entry.code_blob)
@@ -145,6 +156,8 @@ class HOSApi(remote.Service):
                          creation_time=entry.creation_time,
                          last_voted=entry.last_voted,
                          language=entry.language.id(),
+                         git_username=entry.git_username,
+                         name=entry.name,    
                          score=entry.score,
                          total_voted=entry.total_voted,
                          code_blob=entry.code_blob)
@@ -163,6 +176,8 @@ class HOSApi(remote.Service):
                                     creation_time=entry.creation_time,
                                     last_voted=entry.last_voted,
                                     language=entry.language.id(),
+                                    git_username=entry.git_username,
+                                    name=entry.name,    
                                     score=entry.score,
                                     total_voted=entry.total_voted,
                                     code_blob=entry.code_blob)
