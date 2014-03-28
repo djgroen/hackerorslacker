@@ -22,6 +22,9 @@ loadNextSubmitCode = function() {
     $('#submit-btn').show()
 }
 
+loadNextScoreCode = function() {
+}
+
 upvote = function() {
     $('#codeblob').hide()
     $('#spinner').show()
@@ -55,6 +58,10 @@ init = function() {
 
 submit_init = function() {
     gapi.client.load('hackerorslacker', 'v1', loadNextSubmitCode,apiRoot);
+}
+
+score_init = function() {
+    gapi.client.load('hackerorslacker', 'v1', loadNextScoreCode,apiRoot);
 }
 
 do_submit = function() {

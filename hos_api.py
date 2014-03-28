@@ -2,6 +2,7 @@ import endpoints
 import datetime
 import logging
 import random
+import shelve
 from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
@@ -9,6 +10,7 @@ from protorpc import remote
 package = 'hackerorslacker'
 
 from hos_models import *
+from raw_data import *
 
 def addLanguage(name):
     new_language=CodeLanguage(id=name)
@@ -28,7 +30,7 @@ def addCodeBlob(params):
     max_num_entry.put()
 
 def deleteAllCodeBlobs():
-    for blob_key in CodeEntryStore.query().fetch(keys_only=True):
+    for blob_key in CodeEnOBtryStore.query().fetch(keys_only=True):
         blob_key.delete()
     max_num = MaxCodeEntryIndex(id='root', max_index=0)
     max_num.put()
@@ -48,26 +50,45 @@ class HOSApi(remote.Service):
         max_num_entry.put()
         return new_key
 
-    @endpoints.method(CodeEntryPut, CodeEntry,
+    @endpoints.method(message_types.VoidMessage, CodeEntryIDCollection,
+                      path='codeentry_shelve', http_method='POST',
+                      name='codeentry.shelve_add')
+    def code_shelve_put(self, collection_request):
+        a = get_data()
+        max_num_entry = ndb.Key('MaxCodeEntryIndex', 'root').get()
+        retval = []
+        for request_key in a:
+            request = a[request_key]
+            language = ndb.Key( CodeLanguage, "Python" ).get()
+            new_code_blob=CodeEntryStore(id=max_num_entry.max_index+1,
+                                         creation_time=datetime.datetime.now(),
+                                         git_username=request["user"],
+                                         language=language.key, code_blob=request["fragment"])
+            code_key = new_code_blob.put()
+            max_num_entry.max_index = max_num_entry.max_index + 1
+            retval.append(CodeEntryID(key=code_key.urlsafe()))
+        max_num_entry.put()
+        return CodeEntryIDCollection(keys=retval)
+
+
+    @endpoints.method(CodeEntryPutCollection, CodeEntryIDCollection,
                       path='codeentry', http_method='POST',
                       name='codeentry.add')
-    def code_put(self, request):
-        language = ndb.Key( CodeLanguage, request.language ).get()
-        code_key = self.addCodeBlob(language, request.code_blob, request.git_username, request.name)
-        entry = code_key.get()
-        if entry is None:
-            raise endpoints.NotFoundException('Greeting %s not found.' %
-                                              (request.id,))
-        else:
-            return CodeEntry(key=entry.key.urlsafe(),
-                         creation_time=entry.creation_time,
-                         last_voted=entry.last_voted,
-                         git_username=entry.git_username,
-                         name=entry.name,    
-                         language=entry.language.id(),
-                         score=entry.score,
-                         total_voted=entry.total_voted,
-                         code_blob=entry.code_blob)
+    @ndb.transactional(xg=True)
+    def code_put(self, collection_request):
+        max_num_entry = ndb.Key('MaxCodeEntryIndex', 'root').get()
+        retval = []
+        for request in collection_request.entries:
+            language = ndb.Key( CodeLanguage, request.language ).get()
+            new_code_blob=CodeEntryStore(id=max_num_entry.max_index+1,
+                                         creation_time=datetime.datetime.now(),
+                                         git_username=request.git_username, name=request.name,
+                                         language=language.key, code_blob=request.code_blob)
+            code_key = new_code_blob.put()
+            max_num_entry.max_index = max_num_entry.max_index + 1
+            retval.append(CodeEntryID(key=code_key.urlsafe()))
+        max_num_entry.put()
+        return CodeEntryIDCollection(keys=retval)
 
     @endpoints.method(message_types.VoidMessage, CodeEntryCollection,
                       path='codeentry', http_method='GET',

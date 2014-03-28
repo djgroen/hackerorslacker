@@ -31,6 +31,15 @@ class CodeEntryPut(messages.Message):
 class CodeEntryCollection(messages.Message):
     entries = messages.MessageField(CodeEntry, 1, repeated=True)
 
+class CodeEntryPutCollection(messages.Message):
+    entries = messages.MessageField(CodeEntryPut, 1, repeated=True)
+
+class CodeEntryID(messages.Message):
+    key = messages.StringField(1, repeated=False, required=True)
+
+class CodeEntryIDCollection(messages.Message):
+    keys = messages.MessageField(CodeEntryID, 1, repeated=True)
+
 class MaxCodeEntryIndex(ndb.Model):
     max_index = ndb.IntegerProperty(required=True, default=0)
 
