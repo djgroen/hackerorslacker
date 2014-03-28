@@ -39,6 +39,8 @@ loadNextScoreCode = function() {
 upvote = function() {
     $('#codeblob').hide()
     $('#spinner').show()
+    $('#previous-author').empty()
+    $('#previous-score').empty()
     $('.vote-btn').addClass('disabled')
     gapi.client.hackerorslacker.codeentry.up({'id': currentKey}).execute(function (response) {
 	$('#previous-author').text(response['result']['git_username'])
@@ -51,6 +53,8 @@ upvote = function() {
 downvote = function() {
     $('#codeblob').hide()
     $('#spinner').show()
+    $('#previous-author').empty()
+    $('#previous-score').empty()
     $('.vote-btn').addClass('disabled')
     gapi.client.hackerorslacker.codeentry.down({'id': currentKey}).execute(function (response) {
 	$('#previous-author').text(response['result']['git_username'])
@@ -63,6 +67,8 @@ downvote = function() {
 ignorevote = function() {
     $('#codeblob').hide()
     $('#spinner').show()
+    $('#previous-author').empty()
+    $('#previous-score').empty()
     $('.vote-btn').addClass('disabled')
     gapi.client.hackerorslacker.codeentry.ignore({'id': currentKey}).execute(function (response) {
 	$('#previous-author').text(response['result']['git_username'])
