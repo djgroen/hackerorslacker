@@ -19,7 +19,7 @@ loadNextCode = function() {
 	currentKey = response.entries[0].key;
 	//	    escaped_code=$('<div/>').text(code).html();
 	//escaped_code=code.replace(/[\r\n]/g, "<br />");
-	$('#codeblob').append(wordwrap(escaped_code, 30, "\n", false));
+	$('#codeblob').append(wordwrap(escaped_code, 80, "\n", false));
 	SyntaxHighlighter.all()
 	$('#spinner').hide()
 	$('#codeblob').show()
