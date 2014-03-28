@@ -17,6 +17,11 @@ loadNextCode = function() {
     });
 }
 
+loadNextSubmitCode = function() {
+    $('#spinner').hide()
+    $('#submit-btn').show()
+}
+
 upvote = function() {
     $('#codeblob').hide()
     $('#spinner').show()
@@ -46,4 +51,22 @@ ignorevote = function() {
 
 init = function() {
     gapi.client.load('hackerorslacker', 'v1', loadNextCode,apiRoot);
+}
+
+submit_init = function() {
+    gapi.client.load('hackerorslacker', 'v1', loadNextSubmitCode,apiRoot);
+}
+
+do_submit = function() {
+    $('#spinner').show();
+    $('#submit-btn').addClass('disabled');
+    test=$('#code_blob').val();
+    gapi.client.hackerorslacker.codeentry.add(
+	{'code_blob': test,
+	 'language': $('#language').val(),
+	 'git_username': $('#git_username').val()}).execute( function (response) {
+	     $('#spinner').hide()
+	     $('#submit-msg').show()
+	     $('#submit-btn').removeClass('disabled')
+	 });
 }

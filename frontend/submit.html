@@ -7,7 +7,7 @@
     <title>Hacker or Slacker?</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="shCore.css">
     <link rel="stylesheet" href="shThemeDefault.css">
 
@@ -20,6 +20,12 @@
   </head>
   <body>
     <h1>Hacker or Slacker?</h1>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="frontend.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=submit_init"></script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -28,9 +34,17 @@
 
     <br/>
     <div align="center">
-      <a class="btn btn-primary" href="rate.html">Rate!</a><br/>
-      <a class="btn btn-primary" href="submit.html">Submit</a><br/>
-      <a class="btn btn-primary" href="scored.html">Scores</a>
+      <form>
+	My Code: <textarea name="code_blob" cols=80 row=30 id="code_blob"></textarea><br/>
+	Git Username: <input name="git_username" type="text" id="git_username"/><br/>
+	Language: 
+	<select name="language" id="language">
+	  <option>Python</option>
+	  <option>C++</option>
+	</select><br/>
+	E-Mail (to receive your score!!, will be private): <input name="e-mail" id="e-mail"/>
+	<br/><br/><input type="submit" name="Submit!" id="submit-btn" style="display: none" onclick="do_submit();"/><img src="spinner.gif" id="spinner"/><span style="color: green; display: none;" id="submit-msg"><b>Your code has been submitted!</b></span>
+      </form>
     </div>
   </body>
 </html>
