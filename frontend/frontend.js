@@ -1,6 +1,16 @@
 var apiRoot = 'https://gae-starterpack-2.appspot.com/_ah/api';
 var currentKey = ''
 
+function wordwrap( str, width, brk, cut ) {
+    brk = brk || '\n';
+    width = width || 75;
+    cut = cut || false;
+    if (!str) { return str; }
+    var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
+
+    return str.match( RegExp(regex, 'g') ).join( brk );
+}
+
 loadNextCode = function() {
     $('#codeblob').empty()
 
@@ -9,7 +19,7 @@ loadNextCode = function() {
 	currentKey = response.entries[0].key;
 	//	    escaped_code=$('<div/>').text(code).html();
 	//escaped_code=code.replace(/[\r\n]/g, "<br />");
-	$('#codeblob').append(escaped_code);
+	$('#codeblob').append(wordwrap(escaped_code, 30, "\n", false));
 	SyntaxHighlighter.all()
 	$('#spinner').hide()
 	$('#codeblob').show()
