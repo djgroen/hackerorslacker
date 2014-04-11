@@ -1,4 +1,4 @@
-var apiRoot = 'https://gae-starterpack-2.appspot.com/_ah/api';
+var apiRoot = 'https://hackerorslacker-backend.appspot.com/_ah/api';
 var currentKey = ''
 
 function wordwrap( str, width, brk, cut ) {
